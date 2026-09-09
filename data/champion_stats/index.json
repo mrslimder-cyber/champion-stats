@@ -1,0 +1,11 @@
+{
+  "leagues": [
+    {
+      "id": "lec",
+      "name": "LEC",
+      "splits": [
+        "2027-winter"
+      ]
+    }
+  ]
+}

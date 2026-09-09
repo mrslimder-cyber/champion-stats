@@ -1,0 +1,879 @@
+{
+  "league": "LEC",
+  "split": "2027-winter",
+  "lastUpdated": null,
+  "source": "EJEMPLO / PLACEHOLDER - pendiente de conectar con el pipeline de datos real",
+  "isPlaceholder": true,
+  "teams": [
+    {
+      "id": "g2",
+      "name": "G2 Esports",
+      "players": [
+        {
+          "id": "g2-top",
+          "name": "Jugador Top 1",
+          "role": "top",
+          "gamesPlayed": 11,
+          "champions": [
+            {
+              "champion": "Aatrox",
+              "games": 5,
+              "wins": 2,
+              "losses": 3,
+              "winrate": 0.4,
+              "goldDiff15Avg": -685
+            },
+            {
+              "champion": "Camille",
+              "games": 3,
+              "wins": 2,
+              "losses": 1,
+              "winrate": 0.67,
+              "goldDiff15Avg": -833
+            },
+            {
+              "champion": "Jax",
+              "games": 3,
+              "wins": 1,
+              "losses": 2,
+              "winrate": 0.33,
+              "goldDiff15Avg": 161
+            }
+          ]
+        },
+        {
+          "id": "g2-jungle",
+          "name": "Jugador Jungla 1",
+          "role": "jungle",
+          "gamesPlayed": 19,
+          "champions": [
+            {
+              "champion": "Elise",
+              "games": 9,
+              "wins": 5,
+              "losses": 4,
+              "winrate": 0.56,
+              "goldDiff15Avg": 800
+            },
+            {
+              "champion": "Sejuani",
+              "games": 8,
+              "wins": 4,
+              "losses": 4,
+              "winrate": 0.5,
+              "goldDiff15Avg": -573
+            },
+            {
+              "champion": "Vi",
+              "games": 2,
+              "wins": 1,
+              "losses": 1,
+              "winrate": 0.5,
+              "goldDiff15Avg": -565
+            }
+          ]
+        },
+        {
+          "id": "g2-mid",
+          "name": "Jugador Mid 1",
+          "role": "mid",
+          "gamesPlayed": 9,
+          "champions": [
+            {
+              "champion": "Akali",
+              "games": 7,
+              "wins": 5,
+              "losses": 2,
+              "winrate": 0.71,
+              "goldDiff15Avg": 368
+            },
+            {
+              "champion": "Orianna",
+              "games": 2,
+              "wins": 1,
+              "losses": 1,
+              "winrate": 0.5,
+              "goldDiff15Avg": 226
+            }
+          ]
+        },
+        {
+          "id": "g2-adc",
+          "name": "Jugador ADC 1",
+          "role": "adc",
+          "gamesPlayed": 15,
+          "champions": [
+            {
+              "champion": "Ezreal",
+              "games": 5,
+              "wins": 3,
+              "losses": 2,
+              "winrate": 0.6,
+              "goldDiff15Avg": -804
+            },
+            {
+              "champion": "Zeri",
+              "games": 5,
+              "wins": 4,
+              "losses": 1,
+              "winrate": 0.8,
+              "goldDiff15Avg": 1169
+            },
+            {
+              "champion": "Jinx",
+              "games": 5,
+              "wins": 4,
+              "losses": 1,
+              "winrate": 0.8,
+              "goldDiff15Avg": -102
+            }
+          ]
+        },
+        {
+          "id": "g2-support",
+          "name": "Jugador Support 1",
+          "role": "support",
+          "gamesPlayed": 13,
+          "champions": [
+            {
+              "champion": "Thresh",
+              "games": 5,
+              "wins": 3,
+              "losses": 2,
+              "winrate": 0.6,
+              "goldDiff15Avg": 574
+            },
+            {
+              "champion": "Nautilus",
+              "games": 5,
+              "wins": 2,
+              "losses": 3,
+              "winrate": 0.4,
+              "goldDiff15Avg": -103
+            },
+            {
+              "champion": "Rakan",
+              "games": 3,
+              "wins": 2,
+              "losses": 1,
+              "winrate": 0.67,
+              "goldDiff15Avg": -541
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fnc",
+      "name": "Fnatic",
+      "players": [
+        {
+          "id": "fnc-top",
+          "name": "Jugador Top 2",
+          "role": "top",
+          "gamesPlayed": 13,
+          "champions": [
+            {
+              "champion": "Aatrox",
+              "games": 8,
+              "wins": 3,
+              "losses": 5,
+              "winrate": 0.38,
+              "goldDiff15Avg": -457
+            },
+            {
+              "champion": "Renekton",
+              "games": 5,
+              "wins": 4,
+              "losses": 1,
+              "winrate": 0.8,
+              "goldDiff15Avg": 791
+            }
+          ]
+        },
+        {
+          "id": "fnc-jungle",
+          "name": "Jugador Jungla 2",
+          "role": "jungle",
+          "gamesPlayed": 27,
+          "champions": [
+            {
+              "champion": "Vi",
+              "games": 9,
+              "wins": 3,
+              "losses": 6,
+              "winrate": 0.33,
+              "goldDiff15Avg": -607
+            },
+            {
+              "champion": "Viego",
+              "games": 8,
+              "wins": 4,
+              "losses": 4,
+              "winrate": 0.5,
+              "goldDiff15Avg": 1194
+            },
+            {
+              "champion": "Nidalee",
+              "games": 6,
+              "wins": 4,
+              "losses": 2,
+              "winrate": 0.67,
+              "goldDiff15Avg": 0
+            },
+            {
+              "champion": "Sejuani",
+              "games": 4,
+              "wins": 2,
+              "losses": 2,
+              "winrate": 0.5,
+              "goldDiff15Avg": -709
+            }
+          ]
+        },
+        {
+          "id": "fnc-mid",
+          "name": "Jugador Mid 2",
+          "role": "mid",
+          "gamesPlayed": 20,
+          "champions": [
+            {
+              "champion": "Ahri",
+              "games": 9,
+              "wins": 5,
+              "losses": 4,
+              "winrate": 0.56,
+              "goldDiff15Avg": 1139
+            },
+            {
+              "champion": "Akali",
+              "games": 6,
+              "wins": 4,
+              "losses": 2,
+              "winrate": 0.67,
+              "goldDiff15Avg": -186
+            },
+            {
+              "champion": "Orianna",
+              "games": 3,
+              "wins": 1,
+              "losses": 2,
+              "winrate": 0.33,
+              "goldDiff15Avg": 351
+            },
+            {
+              "champion": "Sylas",
+              "games": 2,
+              "wins": 1,
+              "losses": 1,
+              "winrate": 0.5,
+              "goldDiff15Avg": -659
+            }
+          ]
+        },
+        {
+          "id": "fnc-adc",
+          "name": "Jugador ADC 2",
+          "role": "adc",
+          "gamesPlayed": 9,
+          "champions": [
+            {
+              "champion": "Ezreal",
+              "games": 6,
+              "wins": 5,
+              "losses": 1,
+              "winrate": 0.83,
+              "goldDiff15Avg": 700
+            },
+            {
+              "champion": "Zeri",
+              "games": 3,
+              "wins": 2,
+              "losses": 1,
+              "winrate": 0.67,
+              "goldDiff15Avg": -273
+            }
+          ]
+        },
+        {
+          "id": "fnc-support",
+          "name": "Jugador Support 2",
+          "role": "support",
+          "gamesPlayed": 11,
+          "champions": [
+            {
+              "champion": "Nautilus",
+              "games": 6,
+              "wins": 2,
+              "losses": 4,
+              "winrate": 0.33,
+              "goldDiff15Avg": -394
+            },
+            {
+              "champion": "Braum",
+              "games": 3,
+              "wins": 2,
+              "losses": 1,
+              "winrate": 0.67,
+              "goldDiff15Avg": 945
+            },
+            {
+              "champion": "Renata",
+              "games": 2,
+              "wins": 1,
+              "losses": 1,
+              "winrate": 0.5,
+              "goldDiff15Avg": 126
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vit",
+      "name": "Team Vitality",
+      "players": [
+        {
+          "id": "vit-top",
+          "name": "Jugador Top 3",
+          "role": "top",
+          "gamesPlayed": 8,
+          "champions": [
+            {
+              "champion": "Jax",
+              "games": 4,
+              "wins": 1,
+              "losses": 3,
+              "winrate": 0.25,
+              "goldDiff15Avg": 98
+            },
+            {
+              "champion": "Camille",
+              "games": 4,
+              "wins": 2,
+              "losses": 2,
+              "winrate": 0.5,
+              "goldDiff15Avg": 932
+            }
+          ]
+        },
+        {
+          "id": "vit-jungle",
+          "name": "Jugador Jungla 3",
+          "role": "jungle",
+          "gamesPlayed": 22,
+          "champions": [
+            {
+              "champion": "Viego",
+              "games": 9,
+              "wins": 7,
+              "losses": 2,
+              "winrate": 0.78,
+              "goldDiff15Avg": 48
+            },
+            {
+              "champion": "Elise",
+              "games": 8,
+              "wins": 7,
+              "losses": 1,
+              "winrate": 0.88,
+              "goldDiff15Avg": 465
+            },
+            {
+              "champion": "Sejuani",
+              "games": 5,
+              "wins": 2,
+              "losses": 3,
+              "winrate": 0.4,
+              "goldDiff15Avg": -190
+            }
+          ]
+        },
+        {
+          "id": "vit-mid",
+          "name": "Jugador Mid 3",
+          "role": "mid",
+          "gamesPlayed": 6,
+          "champions": [
+            {
+              "champion": "Sylas",
+              "games": 3,
+              "wins": 2,
+              "losses": 1,
+              "winrate": 0.67,
+              "goldDiff15Avg": -776
+            },
+            {
+              "champion": "Azir",
+              "games": 3,
+              "wins": 2,
+              "losses": 1,
+              "winrate": 0.67,
+              "goldDiff15Avg": 905
+            }
+          ]
+        },
+        {
+          "id": "vit-adc",
+          "name": "Jugador ADC 3",
+          "role": "adc",
+          "gamesPlayed": 21,
+          "champions": [
+            {
+              "champion": "Jinx",
+              "games": 9,
+              "wins": 4,
+              "losses": 5,
+              "winrate": 0.44,
+              "goldDiff15Avg": 93
+            },
+            {
+              "champion": "Kaisa",
+              "games": 8,
+              "wins": 3,
+              "losses": 5,
+              "winrate": 0.38,
+              "goldDiff15Avg": -696
+            },
+            {
+              "champion": "Ezreal",
+              "games": 4,
+              "wins": 3,
+              "losses": 1,
+              "winrate": 0.75,
+              "goldDiff15Avg": 953
+            }
+          ]
+        },
+        {
+          "id": "vit-support",
+          "name": "Jugador Support 3",
+          "role": "support",
+          "gamesPlayed": 17,
+          "champions": [
+            {
+              "champion": "Renata",
+              "games": 9,
+              "wins": 3,
+              "losses": 6,
+              "winrate": 0.33,
+              "goldDiff15Avg": -515
+            },
+            {
+              "champion": "Thresh",
+              "games": 3,
+              "wins": 1,
+              "losses": 2,
+              "winrate": 0.33,
+              "goldDiff15Avg": 629
+            },
+            {
+              "champion": "Rakan",
+              "games": 3,
+              "wins": 1,
+              "losses": 2,
+              "winrate": 0.33,
+              "goldDiff15Avg": -501
+            },
+            {
+              "champion": "Nautilus",
+              "games": 2,
+              "wins": 1,
+              "losses": 1,
+              "winrate": 0.5,
+              "goldDiff15Avg": 1167
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kc",
+      "name": "Karmine Corp",
+      "players": [
+        {
+          "id": "kc-top",
+          "name": "Jugador Top 4",
+          "role": "top",
+          "gamesPlayed": 4,
+          "champions": [
+            {
+              "champion": "Jax",
+              "games": 2,
+              "wins": 1,
+              "losses": 1,
+              "winrate": 0.5,
+              "goldDiff15Avg": 235
+            },
+            {
+              "champion": "Gnar",
+              "games": 2,
+              "wins": 2,
+              "losses": 0,
+              "winrate": 1.0,
+              "goldDiff15Avg": 1045
+            }
+          ]
+        },
+        {
+          "id": "kc-jungle",
+          "name": "Jugador Jungla 4",
+          "role": "jungle",
+          "gamesPlayed": 21,
+          "champions": [
+            {
+              "champion": "Vi",
+              "games": 6,
+              "wins": 5,
+              "losses": 1,
+              "winrate": 0.83,
+              "goldDiff15Avg": 749
+            },
+            {
+              "champion": "Elise",
+              "games": 6,
+              "wins": 3,
+              "losses": 3,
+              "winrate": 0.5,
+              "goldDiff15Avg": 1110
+            },
+            {
+              "champion": "Viego",
+              "games": 5,
+              "wins": 4,
+              "losses": 1,
+              "winrate": 0.8,
+              "goldDiff15Avg": 995
+            },
+            {
+              "champion": "Sejuani",
+              "games": 4,
+              "wins": 2,
+              "losses": 2,
+              "winrate": 0.5,
+              "goldDiff15Avg": 1169
+            }
+          ]
+        },
+        {
+          "id": "kc-mid",
+          "name": "Jugador Mid 4",
+          "role": "mid",
+          "gamesPlayed": 16,
+          "champions": [
+            {
+              "champion": "Azir",
+              "games": 9,
+              "wins": 5,
+              "losses": 4,
+              "winrate": 0.56,
+              "goldDiff15Avg": 891
+            },
+            {
+              "champion": "Orianna",
+              "games": 5,
+              "wins": 4,
+              "losses": 1,
+              "winrate": 0.8,
+              "goldDiff15Avg": 316
+            },
+            {
+              "champion": "Ahri",
+              "games": 2,
+              "wins": 1,
+              "losses": 1,
+              "winrate": 0.5,
+              "goldDiff15Avg": -780
+            }
+          ]
+        },
+        {
+          "id": "kc-adc",
+          "name": "Jugador ADC 4",
+          "role": "adc",
+          "gamesPlayed": 13,
+          "champions": [
+            {
+              "champion": "Kaisa",
+              "games": 5,
+              "wins": 2,
+              "losses": 3,
+              "winrate": 0.4,
+              "goldDiff15Avg": 1077
+            },
+            {
+              "champion": "Jinx",
+              "games": 5,
+              "wins": 3,
+              "losses": 2,
+              "winrate": 0.6,
+              "goldDiff15Avg": -817
+            },
+            {
+              "champion": "Ezreal",
+              "games": 3,
+              "wins": 2,
+              "losses": 1,
+              "winrate": 0.67,
+              "goldDiff15Avg": 518
+            }
+          ]
+        },
+        {
+          "id": "kc-support",
+          "name": "Jugador Support 4",
+          "role": "support",
+          "gamesPlayed": 17,
+          "champions": [
+            {
+              "champion": "Rakan",
+              "games": 6,
+              "wins": 3,
+              "losses": 3,
+              "winrate": 0.5,
+              "goldDiff15Avg": 511
+            },
+            {
+              "champion": "Renata",
+              "games": 6,
+              "wins": 3,
+              "losses": 3,
+              "winrate": 0.5,
+              "goldDiff15Avg": 1051
+            },
+            {
+              "champion": "Thresh",
+              "games": 5,
+              "wins": 3,
+              "losses": 2,
+              "winrate": 0.6,
+              "goldDiff15Avg": -240
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sk",
+      "name": "SK Gaming",
+      "players": [
+        {
+          "id": "sk-top",
+          "name": "Jugador Top 5",
+          "role": "top",
+          "gamesPlayed": 12,
+          "champions": [
+            {
+              "champion": "Aatrox",
+              "games": 7,
+              "wins": 5,
+              "losses": 2,
+              "winrate": 0.71,
+              "goldDiff15Avg": 946
+            },
+            {
+              "champion": "Jax",
+              "games": 5,
+              "wins": 3,
+              "losses": 2,
+              "winrate": 0.6,
+              "goldDiff15Avg": -622
+            }
+          ]
+        },
+        {
+          "id": "sk-jungle",
+          "name": "Jugador Jungla 5",
+          "role": "jungle",
+          "gamesPlayed": 8,
+          "champions": [
+            {
+              "champion": "Nidalee",
+              "games": 3,
+              "wins": 2,
+              "losses": 1,
+              "winrate": 0.67,
+              "goldDiff15Avg": -618
+            },
+            {
+              "champion": "Viego",
+              "games": 3,
+              "wins": 2,
+              "losses": 1,
+              "winrate": 0.67,
+              "goldDiff15Avg": 659
+            },
+            {
+              "champion": "Vi",
+              "games": 2,
+              "wins": 1,
+              "losses": 1,
+              "winrate": 0.5,
+              "goldDiff15Avg": 265
+            }
+          ]
+        },
+        {
+          "id": "sk-mid",
+          "name": "Jugador Mid 5",
+          "role": "mid",
+          "gamesPlayed": 16,
+          "champions": [
+            {
+              "champion": "Azir",
+              "games": 9,
+              "wins": 4,
+              "losses": 5,
+              "winrate": 0.44,
+              "goldDiff15Avg": 1007
+            },
+            {
+              "champion": "Sylas",
+              "games": 5,
+              "wins": 3,
+              "losses": 2,
+              "winrate": 0.6,
+              "goldDiff15Avg": 891
+            },
+            {
+              "champion": "Akali",
+              "games": 2,
+              "wins": 1,
+              "losses": 1,
+              "winrate": 0.5,
+              "goldDiff15Avg": -10
+            }
+          ]
+        },
+        {
+          "id": "sk-adc",
+          "name": "Jugador ADC 5",
+          "role": "adc",
+          "gamesPlayed": 18,
+          "champions": [
+            {
+              "champion": "Zeri",
+              "games": 8,
+              "wins": 5,
+              "losses": 3,
+              "winrate": 0.62,
+              "goldDiff15Avg": -665
+            },
+            {
+              "champion": "Ezreal",
+              "games": 6,
+              "wins": 2,
+              "losses": 4,
+              "winrate": 0.33,
+              "goldDiff15Avg": 28
+            },
+            {
+              "champion": "Kaisa",
+              "games": 4,
+              "wins": 2,
+              "losses": 2,
+              "winrate": 0.5,
+              "goldDiff15Avg": 853
+            }
+          ]
+        },
+        {
+          "id": "sk-support",
+          "name": "Jugador Support 5",
+          "role": "support",
+          "gamesPlayed": 8,
+          "champions": [
+            {
+              "champion": "Renata",
+              "games": 6,
+              "wins": 3,
+              "losses": 3,
+              "winrate": 0.5,
+              "goldDiff15Avg": 1059
+            },
+            {
+              "champion": "Nautilus",
+              "games": 2,
+              "wins": 2,
+              "losses": 0,
+              "winrate": 1.0,
+              "goldDiff15Avg": -459
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "roleTopPicks": {
+    "top": [
+      {
+        "champion": "Aatrox",
+        "picks": 20
+      },
+      {
+        "champion": "Jax",
+        "picks": 14
+      },
+      {
+        "champion": "Camille",
+        "picks": 7
+      }
+    ],
+    "jungle": [
+      {
+        "champion": "Viego",
+        "picks": 25
+      },
+      {
+        "champion": "Elise",
+        "picks": 23
+      },
+      {
+        "champion": "Sejuani",
+        "picks": 21
+      }
+    ],
+    "mid": [
+      {
+        "champion": "Azir",
+        "picks": 21
+      },
+      {
+        "champion": "Akali",
+        "picks": 15
+      },
+      {
+        "champion": "Ahri",
+        "picks": 11
+      }
+    ],
+    "adc": [
+      {
+        "champion": "Ezreal",
+        "picks": 24
+      },
+      {
+        "champion": "Jinx",
+        "picks": 19
+      },
+      {
+        "champion": "Kaisa",
+        "picks": 17
+      }
+    ],
+    "support": [
+      {
+        "champion": "Renata",
+        "picks": 23
+      },
+      {
+        "champion": "Nautilus",
+        "picks": 15
+      },
+      {
+        "champion": "Thresh",
+        "picks": 13
+      }
+    ]
+  }
+}

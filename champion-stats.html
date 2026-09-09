@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estadísticas de Campeones · Mauro Garih</title>
+<style>
+  :root{
+    --bg: #0a0a0f;
+    --bg-panel: #121218;
+    --bg-panel-2: #17171f;
+    --border: #26262f;
+    --text: #eceef3;
+    --text-dim: #9a9aa8;
+    --accent: #E8FF3D;   /* amarillo Vitality */
+    --accent-dim: #b7c92e;
+    --win: #4fd17a;
+    --loss: #ef5b6b;
+    --radius: 10px;
+    --font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    line-height: 1.5;
+  }
+
+  .cs-wrap{
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 48px 20px 96px;
+  }
+
+  .cs-header{
+    margin-bottom: 36px;
+  }
+
+  .cs-eyebrow{
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0 0 8px;
+  }
+
+  .cs-title{
+    font-size: 34px;
+    font-weight: 700;
+    margin: 0 0 10px;
+    letter-spacing: -0.01em;
+  }
+
+  .cs-subtitle{
+    color: var(--text-dim);
+    font-size: 15px;
+    max-width: 640px;
+    margin: 0;
+  }
+
+  .cs-placeholder-banner{
+    margin-top: 22px;
+    padding: 14px 16px;
+    border: 1px solid #4a4720;
+    background: #1c1a0d;
+    border-radius: var(--radius);
+    font-size: 13.5px;
+    color: #e9dd8f;
+    display: none;
+  }
+  .cs-placeholder-banner.show{ display:block; }
+
+  /* selector de liga / split */
+  .cs-controls{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 28px 0 34px;
+  }
+
+  .cs-select{
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-family: var(--font);
+  }
+
+  .cs-select:focus{ outline: 1px solid var(--accent); }
+
+  /* breadcrumb / navegación de vistas */
+  .cs-breadcrumb{
+    display:flex;
+    align-items:center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 22px;
+    min-height: 20px;
+  }
+  .cs-breadcrumb button{
+    background:none;
+    border:none;
+    color: var(--text-dim);
+    font-size: 13px;
+    cursor:pointer;
+    padding: 0;
+    font-family: var(--font);
+  }
+  .cs-breadcrumb button:hover{ color: var(--accent); }
+  .cs-breadcrumb .sep{ opacity:.5; }
+  .cs-breadcrumb .current{ color: var(--text); }
+
+  /* vista liga: columnas por rol */
+  .cs-role-grid{
+    display:grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 900px){
+    .cs-role-grid{ grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 520px){
+    .cs-role-grid{ grid-template-columns: 1fr; }
+  }
+
+  .cs-role-card{
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    cursor: pointer;
+    transition: border-color .15s ease, transform .15s ease;
+  }
+  .cs-role-card:hover{
+    border-color: var(--accent-dim);
+    transform: translateY(-2px);
+  }
+
+  .cs-role-card h3{
+    margin: 0 0 12px;
+    font-size: 13px;
+    text-transform: none;
+    color: var(--text-dim);
+    font-weight: 600;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+  }
+  .cs-role-card h3 .arrow{ color: var(--accent); font-size: 13px; }
+
+  .cs-pick-row{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    padding: 7px 0;
+    border-top: 1px solid var(--border);
+    font-size: 13.5px;
+  }
+  .cs-pick-row:first-of-type{ border-top: none; }
+  .cs-pick-row .name{ color: var(--text); }
+  .cs-pick-row .count{ color: var(--text-dim); font-variant-numeric: tabular-nums; }
+
+  /* vista rol: lista de jugadores */
+  .cs-player-list{
+    display:grid;
+    gap: 10px;
+  }
+  .cs-player-row{
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    cursor:pointer;
+    transition: border-color .15s ease;
+  }
+  .cs-player-row:hover{ border-color: var(--accent-dim); }
+
+  .cs-player-row .who{
+    display:flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .cs-player-row .pname{ font-weight: 600; font-size: 14.5px; }
+  .cs-player-row .pteam{ font-size: 12.5px; color: var(--text-dim); }
+
+  .cs-player-row .stat{
+    text-align:right;
+    font-size: 12.5px;
+    color: var(--text-dim);
+  }
+  .cs-player-row .stat strong{ color: var(--text); font-size: 13.5px; display:block; }
+
+  /* vista jugador: resumen + tabla */
+  .cs-summary-grid{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 26px;
+  }
+  @media (max-width: 760px){
+    .cs-summary-grid{ grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .cs-summary-card{
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+  .cs-summary-card .label{
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .cs-summary-card .champ{
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .cs-summary-card .sub{
+    font-size: 12.5px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+  .cs-summary-card .sub.pos{ color: var(--win); }
+  .cs-summary-card .sub.neg{ color: var(--loss); }
+
+  table.cs-table{
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    font-size: 13.5px;
+  }
+  table.cs-table th, table.cs-table td{
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  table.cs-table th{
+    color: var(--text-dim);
+    font-weight: 600;
+    font-size: 12px;
+    background: var(--bg-panel-2);
+  }
+  table.cs-table tr:last-child td{ border-bottom: none; }
+  table.cs-table td.num{ text-align:right; font-variant-numeric: tabular-nums; }
+  table.cs-table td.wr-pos{ color: var(--win); }
+  table.cs-table td.wr-neg{ color: var(--loss); }
+
+  .cs-empty{
+    color: var(--text-dim);
+    font-size: 14px;
+    padding: 40px 0;
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+
+<div class="cs-wrap">
+
+  <div class="cs-header">
+    <p class="cs-eyebrow">Herramientas</p>
+    <h1 class="cs-title">Estadísticas de Campeones Pro</h1>
+    <p class="cs-subtitle">Consulta qué campeones se están pickeando en cada liga, y cómo rinde cada jugador con ellos: pick rate, winrate y ventaja de oro a los 15 minutos.</p>
+    <div id="csPlaceholderBanner" class="cs-placeholder-banner">
+      Estás viendo <strong>datos de ejemplo</strong>. Esta sección todavía no está conectada al pipeline de datos real — se activará de cara al Winter Split 2027.
+    </div>
+  </div>
+
+  <div class="cs-controls">
+    <select id="csLeagueSelect" class="cs-select"></select>
+    <select id="csSplitSelect" class="cs-select"></select>
+  </div>
+
+  <div id="csBreadcrumb" class="cs-breadcrumb"></div>
+
+  <div id="csContent"></div>
+
+</div>
+
+<script>
+(function(){
+
+  // Ajusta esta ruta si alojas los JSON en otro sitio del servidor
+  const DATA_BASE = "/data/champion-stats";
+
+  const ROLE_LABEL = { top:"Top", jungle:"Jungla", mid:"Mid", adc:"ADC", support:"Support" };
+  const ROLE_ORDER = ["top","jungle","mid","adc","support"];
+
+  let indexData = null;
+  let splitData = null;
+  // view: {type: 'league'} | {type:'role', role} | {type:'player', playerId}
+  let view = { type: "league" };
+
+  const els = {
+    leagueSelect: document.getElementById("csLeagueSelect"),
+    splitSelect: document.getElementById("csSplitSelect"),
+    breadcrumb: document.getElementById("csBreadcrumb"),
+    content: document.getElementById("csContent"),
+    banner: document.getElementById("csPlaceholderBanner"),
+  };
+
+  init();
+
+  async function init(){
+    try{
+      const res = await fetch(`${DATA_BASE}/index.json`);
+      indexData = await res.json();
+    }catch(e){
+      els.content.innerHTML = `<div class="cs-empty">No se han podido cargar las ligas disponibles (${DATA_BASE}/index.json). Comprueba la ruta de los datos.</div>`;
+      return;
+    }
+
+    populateLeagueSelect();
+    els.leagueSelect.addEventListener("change", () => {
+      populateSplitSelect();
+      loadSplit();
+    });
+    els.splitSelect.addEventListener("change", () => {
+      view = { type: "league" };
+      loadSplit();
+    });
+
+    populateSplitSelect();
+    loadSplit();
+  }
+
+  function populateLeagueSelect(){
+    els.leagueSelect.innerHTML = indexData.leagues
+      .map(l => `<option value="${l.id}">${l.name}</option>`)
+      .join("");
+  }
+
+  function populateSplitSelect(){
+    const league = indexData.leagues.find(l => l.id === els.leagueSelect.value) || indexData.leagues[0];
+    els.splitSelect.innerHTML = league.splits
+      .map(s => `<option value="${s}">${formatSplitLabel(s)}</option>`)
+      .join("");
+  }
+
+  function formatSplitLabel(splitId){
+    // "2027-winter" -> "Winter 2027"
+    const [year, season] = splitId.split("-");
+    const seasonLabel = season.charAt(0).toUpperCase() + season.slice(1);
+    return `${seasonLabel} ${year}`;
+  }
+
+  async function loadSplit(){
+    const leagueId = els.leagueSelect.value;
+    const splitId = els.splitSelect.value;
+    els.content.innerHTML = `<div class="cs-empty">Cargando datos…</div>`;
+
+    try{
+      const res = await fetch(`${DATA_BASE}/${leagueId}/${splitId}.json`);
+      splitData = await res.json();
+    }catch(e){
+      els.content.innerHTML = `<div class="cs-empty">No se han encontrado datos para esta liga/split todavía.</div>`;
+      return;
+    }
+
+    els.banner.classList.toggle("show", !!splitData.isPlaceholder);
+    view = { type: "league" };
+    render();
+  }
+
+  function render(){
+    renderBreadcrumb();
+    if(view.type === "league") renderLeagueView();
+    else if(view.type === "role") renderRoleView(view.role);
+    else if(view.type === "player") renderPlayerView(view.playerId);
+  }
+
+  function renderBreadcrumb(){
+    const crumbs = [];
+    crumbs.push(`<button data-nav="league">${splitData.league} · ${formatSplitLabel(splitData.split)}</button>`);
+
+    if(view.type === "role"){
+      crumbs.push(`<span class="sep">/</span><span class="current">${ROLE_LABEL[view.role]}</span>`);
+    }
+    if(view.type === "player"){
+      const p = findPlayer(view.playerId);
+      crumbs.push(`<span class="sep">/</span><button data-nav="role" data-role="${p.role}">${ROLE_LABEL[p.role]}</button>`);
+      crumbs.push(`<span class="sep">/</span><span class="current">${p.name}</span>`);
+    }
+
+    els.breadcrumb.innerHTML = crumbs.join("");
+    els.breadcrumb.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if(btn.dataset.nav === "league") view = { type: "league" };
+        if(btn.dataset.nav === "role") view = { type: "role", role: btn.dataset.role };
+        render();
+      });
+    });
+  }
+
+  function renderLeagueView(){
+    const html = ROLE_ORDER.map(role => {
+      const picks = (splitData.roleTopPicks && splitData.roleTopPicks[role]) || [];
+      const rows = picks.map(p => `
+        <div class="cs-pick-row">
+          <span class="name">${p.champion}</span>
+          <span class="count">${p.picks} picks</span>
+        </div>
+      `).join("") || `<div class="cs-pick-row"><span class="name">Sin datos</span></div>`;
+
+      return `
+        <div class="cs-role-card" data-role="${role}">
+          <h3>${ROLE_LABEL[role]} <span class="arrow">→</span></h3>
+          ${rows}
+        </div>
+      `;
+    }).join("");
+
+    els.content.innerHTML = `<div class="cs-role-grid">${html}</div>`;
+    els.content.querySelectorAll(".cs-role-card").forEach(card => {
+      card.addEventListener("click", () => {
+        view = { type: "role", role: card.dataset.role };
+        render();
+      });
+    });
+  }
+
+  function renderRoleView(role){
+    const players = [];
+    splitData.teams.forEach(team => {
+      team.players.forEach(p => {
+        if(p.role === role) players.push({ ...p, teamName: team.name });
+      });
+    });
+
+    if(players.length === 0){
+      els.content.innerHTML = `<div class="cs-empty">No hay jugadores registrados en esta posición todavía.</div>`;
+      return;
+    }
+
+    const rows = players.map(p => {
+      const topChamp = [...p.champions].sort((a,b) => b.games - a.games)[0];
+      return `
+        <div class="cs-player-row" data-player="${p.id}">
+          <div class="who">
+            <span class="pname">${p.name}</span>
+            <span class="pteam">${p.teamName}</span>
+          </div>
+          <div class="stat">
+            <strong>${topChamp ? topChamp.champion : "—"}</strong>
+            ${topChamp ? `${topChamp.games} partidas · ${Math.round(topChamp.winrate*100)}% WR` : ""}
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    els.content.innerHTML = `<div class="cs-player-list">${rows}</div>`;
+    els.content.querySelectorAll(".cs-player-row").forEach(row => {
+      row.addEventListener("click", () => {
+        view = { type: "player", playerId: row.dataset.player };
+        render();
+      });
+    });
+  }
+
+  function renderPlayerView(playerId){
+    const player = findPlayer(playerId);
+    if(!player){
+      els.content.innerHTML = `<div class="cs-empty">Jugador no encontrado.</div>`;
+      return;
+    }
+
+    const champs = player.champions;
+    const mostPicked = [...champs].sort((a,b) => b.games - a.games)[0];
+    const bestWR = [...champs].sort((a,b) => b.winrate - a.winrate)[0];
+    const worstWR = [...champs].sort((a,b) => a.winrate - b.winrate)[0];
+    const bestGD = [...champs].sort((a,b) => b.goldDiff15Avg - a.goldDiff15Avg)[0];
+
+    const summary = `
+      <div class="cs-summary-grid">
+        ${summaryCard("Más pickeado", mostPicked, `${mostPicked.games} partidas`)}
+        ${summaryCard("Mayor winrate", bestWR, `${Math.round(bestWR.winrate*100)}% WR`)}
+        ${summaryCard("Menor winrate", worstWR, `${Math.round(worstWR.winrate*100)}% WR`)}
+        ${summaryCard("Mejor ventaja de oro @15", bestGD, formatGD(bestGD.goldDiff15Avg), true)}
+      </div>
+    `;
+
+    const rows = [...champs].sort((a,b) => b.games - a.games).map(c => `
+      <tr>
+        <td>${c.champion}</td>
+        <td class="num">${c.games}</td>
+        <td class="num">${c.wins}-${c.losses}</td>
+        <td class="num ${c.winrate >= 0.5 ? 'wr-pos':'wr-neg'}">${Math.round(c.winrate*100)}%</td>
+        <td class="num ${c.goldDiff15Avg >= 0 ? 'wr-pos':'wr-neg'}">${formatGD(c.goldDiff15Avg)}</td>
+      </tr>
+    `).join("");
+
+    const table = `
+      <table class="cs-table">
+        <thead>
+          <tr>
+            <th>Campeón</th>
+            <th style="text-align:right">Partidas</th>
+            <th style="text-align:right">V-D</th>
+            <th style="text-align:right">Winrate</th>
+            <th style="text-align:right">Oro @15</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+
+    els.content.innerHTML = summary + table;
+
+    function summaryCard(label, champ, subtext, isGold){
+      const posClass = isGold ? (champ.goldDiff15Avg >= 0 ? "pos" : "neg") : "";
+      return `
+        <div class="cs-summary-card">
+          <div class="label">${label}</div>
+          <div class="champ">${champ.champion}</div>
+          <div class="sub ${posClass}">${subtext}</div>
+        </div>
+      `;
+    }
+  }
+
+  function formatGD(v){
+    const sign = v > 0 ? "+" : "";
+    return `${sign}${v} oro`;
+  }
+
+  function findPlayer(playerId){
+    for(const team of splitData.teams){
+      for(const p of team.players){
+        if(p.id === playerId) return { ...p, teamName: team.name };
+      }
+    }
+    return null;
+  }
+
+})();
+</script>
+
+</body>
+</html>
