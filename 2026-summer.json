@@ -1,0 +1,89 @@
+{
+  "league": "LEC",
+  "split": "2026-summer",
+  "lastUpdated": "2026-09-09T00:00:00Z",
+  "source": "Leaguepedia / gol.gg / Liquipedia (split en curso, datos parciales reales — ver notas por jugador)",
+  "isPlaceholder": false,
+  "teams": [
+    {
+      "id": "g2",
+      "name": "G2 Esports",
+      "players": [
+        {
+          "id": "g2-top",
+          "name": "BrokenBlade",
+          "role": "top",
+          "gamesPlayed": null,
+          "note": "Sin agregado real fiable por campeón para el split Summer 2026 en el momento de generar este JSON. Se han visto campeones reales en partidas sueltas (Yorick, Rumble, Ambessa, Kled, KSante, Olaf, Gnar) pero no un total games/W/L/winrate consolidado y verificado.",
+          "champions": []
+        },
+        {
+          "id": "g2-jungle",
+          "name": "SkewMond",
+          "role": "jungle",
+          "gamesPlayed": null,
+          "note": "Mismo caso que BrokenBlade: sin agregado real consolidado para Summer 2026.",
+          "champions": []
+        },
+        {
+          "id": "g2-mid",
+          "name": "Caps",
+          "role": "mid",
+          "gamesPlayed": 14,
+          "champions": [
+            { "champion": "Orianna",    "games": 2, "wins": 2, "losses": 0, "winrate": 1.00, "goldDiff15Avg": null },
+            { "champion": "Ahri",       "games": 2, "wins": 1, "losses": 1, "winrate": 0.50, "goldDiff15Avg": null },
+            { "champion": "Akali",      "games": 2, "wins": 2, "losses": 0, "winrate": 1.00, "goldDiff15Avg": null },
+            { "champion": "Viktor",     "games": 2, "wins": 2, "losses": 0, "winrate": 1.00, "goldDiff15Avg": null },
+            { "champion": "Cassiopeia", "games": 2, "wins": 2, "losses": 0, "winrate": 1.00, "goldDiff15Avg": null },
+            { "champion": "Locke",      "games": 1, "wins": 0, "losses": 1, "winrate": 0.00, "goldDiff15Avg": null },
+            { "champion": "Yone",       "games": 1, "wins": 1, "losses": 0, "winrate": 1.00, "goldDiff15Avg": null },
+            { "champion": "Annie",      "games": 1, "wins": 1, "losses": 0, "winrate": 1.00, "goldDiff15Avg": null },
+            { "champion": "Galio",      "games": 1, "wins": 0, "losses": 1, "winrate": 0.00, "goldDiff15Avg": null }
+          ],
+          "note": "Real y completo (gol.gg, LEC 2026 Summer Season): record global 11V-3D. goldDiff15Avg por campeón no existe como dato público — solo el promedio del jugador en toda la temporada (+73 de media), no desglosado por campeón, así que se deja en null en vez de inventarlo."
+        },
+        {
+          "id": "g2-adc",
+          "name": "Hans Sama",
+          "role": "adc",
+          "gamesPlayed": null,
+          "note": "Sin agregado real consolidado para Summer 2026 en el momento de generar este JSON.",
+          "champions": []
+        },
+        {
+          "id": "g2-support",
+          "name": "Labrov",
+          "role": "support",
+          "gamesPlayed": null,
+          "note": "Sin agregado real consolidado para Summer 2026 en el momento de generar este JSON.",
+          "champions": []
+        }
+      ]
+    },
+    {
+      "id": "kc",
+      "name": "Karmine Corp",
+      "players": [
+        { "id": "kc-top",     "name": "Canna",    "role": "top",     "gamesPlayed": null, "note": "Sin agregado real consolidado para Summer 2026.", "champions": [] },
+        { "id": "kc-jungle",  "name": "Yike",      "role": "jungle",  "gamesPlayed": null, "note": "Sin agregado real consolidado para Summer 2026.", "champions": [] },
+        { "id": "kc-mid",     "name": "kyeahoo",   "role": "mid",     "gamesPlayed": null, "note": "Sin agregado real consolidado para Summer 2026.", "champions": [] },
+        { "id": "kc-adc",     "name": "Caliste",   "role": "adc",     "gamesPlayed": null, "note": "Sin agregado real consolidado para Summer 2026. Es el líder de KDA de todo el split (8.3, 118/29/124) según gol.gg.", "champions": [] },
+        { "id": "kc-support", "name": "Busio",     "role": "support", "gamesPlayed": null, "note": "Sin agregado real consolidado para Summer 2026.", "champions": [] }
+      ]
+    }
+  ],
+  "roleTopPicks": {
+    "top":     [ { "champion": "Rumble",  "picks": 35 }, { "champion": "Ambessa", "picks": 27 }, { "champion": "Gnar",   "picks": 22 } ],
+    "jungle":  [ { "champion": "Jarvan IV","picks": 32 }, { "champion": "Lee Sin", "picks": 24 }, { "champion": "Vi",     "picks": 24 } ],
+    "mid":     [ { "champion": "Orianna", "picks": 27 }, { "champion": "Syndra",  "picks": 25 }, { "champion": "Ryze",   "picks": 23 } ],
+    "adc":     [ { "champion": "Lucian",  "picks": 26 }, { "champion": "Ezreal",  "picks": 25 }, { "champion": "Jhin",   "picks": 19 } ],
+    "support": [ { "champion": "Rell",    "picks": 5 },  { "champion": "Rakan",   "picks": 5 },  { "champion": "Alistar","picks": 4 } ]
+  },
+  "notesGenerales": [
+    "roleTopPicks es real, sacado del desglose de Picks & Bans de LEC 2026 Summer Season en gol.gg (agregado de las 10 ligas/equipos completos).",
+    "El split está en curso (24 jul - 20 sep 2026), así que estos números subirán con cada semana jugada.",
+    "goldDiff15Avg por jugador+campeón no existe públicamente en ninguna fuente consultada (Leaguepedia, gol.gg, Liquipedia): solo se publica el promedio del jugador en toda la temporada, no desglosado por campeón. Por eso se deja en null en vez de aproximarlo con el dato equivocado.",
+    "Faltan 9 de los 10 jugadores con champions[] vacío por no encontrar el agregado consolidado real — mejor vacío que inventado."
+  ]
+}
