@@ -51,7 +51,27 @@ function asArray(v) {
  */
 export async function cargoFields(table) {
   const data = await cargoFetch({ action: "cargofields", table, format: "json" });
-  return asArray(data.cargofields).map((f) => f.field);
+  const raw = asArray(data.cargofields);
+
+  const fields = raw
+    .map((f) => {
+      if (typeof f === "string") return f;               // ["GameId", "DateTime UTC", ...]
+      if (f && typeof f === "object") {
+        // {"field": "GameId", "type": "..."}  o  {"name": "GameId"}  o  {"GameId": "String"}
+        return f.field || f.name || f.Field || Object.keys(f)[0] || null;
+      }
+      return null;
+    })
+    .filter(Boolean);
+
+  if (!fields.length && raw.length) {
+    console.error(
+      `DEBUG: no pude extraer nombres de campo para "${table}". Respuesta cruda:`,
+      JSON.stringify(data).slice(0, 2000)
+    );
+  }
+
+  return fields;
 }
 /**
  * Dada una lista de campos "descubiertos" (cargoFields) y una lista de nombres
