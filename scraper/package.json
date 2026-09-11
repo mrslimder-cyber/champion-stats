@@ -1,0 +1,17 @@
+{
+  "name": "champion-stats-scraper",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Scraper Leaguepedia (Cargo API) -> Supabase -> JSON estático para champion-stats.",
+  "scripts": {
+    "sync": "node sync.mjs",
+    "generate": "node generate-json.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.4"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
