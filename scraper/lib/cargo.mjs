@@ -6,7 +6,7 @@ const API = "https://lol.fandom.com/api.php";
 const USER_AGENT =
   process.env.CARGO_USER_AGENT ||
   "champion-stats-scraper/1.0 (repo: mrslimder-cyber/champion-stats; uso personal, no comercial)";
-const MIN_GAP_MS = Number(process.env.CARGO_MIN_GAP_MS || 1200); // ~1 petición/seg
+const MIN_GAP_MS = Number(process.env.CARGO_MIN_GAP_MS || 3000); // ~1 petición cada 3s en vez de 1.2s
 
 let lastCallAt = 0;
 async function sleep(ms) {
@@ -28,9 +28,9 @@ async function cargoFetch(params, attempt = 1) {
   }
   const data = await res.json();
   if (data.error) {
-    if (data.error.code === "ratelimited" && attempt <= 5) {
-      const waitMs = attempt * 5000; // 5s, 10s, 15s, 20s, 25s
-      console.warn(`  (rate limit de Leaguepedia, esperando ${waitMs / 1000}s antes de reintentar — intento ${attempt}/5)`);
+    if (data.error.code === "ratelimited" && attempt <= 6) {
+      const waitMs = Math.min(attempt * 15000, 60000); // 15s, 30s, 45s, 60s, 60s, 60s
+      console.warn(`  (rate limit de Leaguepedia, esperando ${waitMs / 1000}s antes de reintentar — intento ${attempt}/6)`);
       await sleep(waitMs);
       return cargoFetch(params, attempt + 1);
     }
