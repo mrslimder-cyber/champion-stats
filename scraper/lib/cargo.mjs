@@ -51,20 +51,24 @@ function asArray(v) {
  */
 export async function cargoFields(table) {
   const data = await cargoFetch({ action: "cargofields", table, format: "json" });
-  const raw = asArray(data.cargofields);
+  const raw = data.cargofields;
 
-  const fields = raw
-    .map((f) => {
-      if (typeof f === "string") return f;               // ["GameId", "DateTime UTC", ...]
-      if (f && typeof f === "object") {
-        // {"field": "GameId", "type": "..."}  o  {"name": "GameId"}  o  {"GameId": "String"}
-        return f.field || f.name || f.Field || Object.keys(f)[0] || null;
-      }
-      return null;
-    })
-    .filter(Boolean);
+  let fields = [];
+  if (Array.isArray(raw)) {
+    // por si en algún momento SÍ viene como lista de objetos {field, type} o strings
+    fields = raw
+      .map((f) => {
+        if (typeof f === "string") return f;
+        if (f && typeof f === "object") return f.field || f.name || f.Field || null;
+        return null;
+      })
+      .filter(Boolean);
+  } else if (raw && typeof raw === "object") {
+    // objeto keyed por nombre de campo: {"GameId": {"type": "String"}, ...}
+    fields = Object.keys(raw);
+  }
 
-  if (!fields.length && raw.length) {
+  if (!fields.length) {
     console.error(
       `DEBUG: no pude extraer nombres de campo para "${table}". Respuesta cruda:`,
       JSON.stringify(data).slice(0, 2000)
