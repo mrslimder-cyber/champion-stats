@@ -20,7 +20,10 @@ async function rateLimit() {
 
 async function cargoFetch(params) {
   await rateLimit();
-  const url = `${API}?${new URLSearchParams(params).toString()}`;
+  const url = `${API}?${new URLSearchParams({
+    ...params,
+    formatversion: "2", // fuerza arrays JSON "de verdad" (v1 puede serializar listas como objetos {"0":..,"1":..})
+  }).toString()}`;
   const res = await fetch(url, { headers: { "User-Agent": USER_AGENT } });
   if (!res.ok) {
     const body = await res.text().catch(() => "");
@@ -33,6 +36,14 @@ async function cargoFetch(params) {
   return data;
 }
 
+// Normaliza un valor que "debería" ser array: si la API devolvió un objeto
+// con claves numéricas en vez de un array real, lo convierte igualmente.
+function asArray(v) {
+  if (Array.isArray(v)) return v;
+  if (v && typeof v === "object") return Object.values(v);
+  return [];
+}
+
 /**
  * Devuelve la lista real de nombres de campo de una tabla Cargo.
  * Se usa para no asumir de memoria nombres de columnas que Leaguepedia
@@ -40,9 +51,8 @@ async function cargoFetch(params) {
  */
 export async function cargoFields(table) {
   const data = await cargoFetch({ action: "cargofields", table, format: "json" });
-  return (data.cargofields || []).map((f) => f.field);
+  return asArray(data.cargofields).map((f) => f.field);
 }
-
 /**
  * Dada una lista de campos "descubiertos" (cargoFields) y una lista de nombres
  * candidatos en orden de preferencia, devuelve el primero que exista de verdad.
@@ -83,7 +93,7 @@ export async function cargoQueryAll({ tables, fields, where = "", joinOn = "", o
     if (orderBy) params.order_by = orderBy;
 
     const data = await cargoFetch(params);
-    const rows = (data.cargoquery || []).map((r) => r.title);
+    const rows = asArray(data.cargoquery).map((r) => r.title);
     all.push(...rows);
 
     if (rows.length < limit) break;
