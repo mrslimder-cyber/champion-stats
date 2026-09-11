@@ -1,0 +1,66 @@
+name: Sync champion stats (LEC)
+
+on:
+  schedule:
+    # 19:00 y 22:00 CEST (UTC+2), viernes a lunes -> 17:00 y 20:00 UTC.
+    # IMPORTANTE: CEST solo aplica en horario de verano. Cuando España/CE pase a
+    # horario de invierno (CET, UTC+1) hay que sumar 1h a estos cron para seguir
+    # dando las 19:00/22:00 hora local: '0 18 * * 5,6,0,1' y '0 21 * * 5,6,0,1'.
+    - cron: "0 17 * * 5,6,0,1"
+    - cron: "0 20 * * 5,6,0,1"
+  workflow_dispatch:
+    inputs:
+      split:
+        description: "Split a sincronizar (ej. 2026-summer)"
+        required: false
+        default: "2026-summer"
+
+env:
+  LEAGUE: LEC
+  SPLIT: ${{ github.event.inputs.split || '2026-summer' }}
+  OVERVIEW_PAGE: "LEC/2026 Season/Summer Season"
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar dependencias del scraper
+        working-directory: scraper
+        run: npm install --omit=dev
+
+      - name: Leaguepedia -> Supabase (backfill / incremental)
+        working-directory: scraper
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: node sync.mjs
+
+      - name: Supabase -> JSON estático
+        working-directory: scraper
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          OUT_DIR: ../data/champion_stats
+        run: node generate-json.mjs
+
+      - name: Commit y push si hay cambios
+        run: |
+          git config user.name "champion-stats-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/champion_stats
+          if git diff --cached --quiet; then
+            echo "Sin cambios en los JSON, no hago commit."
+          else
+            git commit -m "chore: actualizar estadísticas ${{ env.LEAGUE }} ${{ env.SPLIT }} [skip ci]"
+            git push
+          fi
