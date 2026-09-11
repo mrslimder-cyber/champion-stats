@@ -258,6 +258,11 @@
   table.cs-table td.wr-pos{ color: var(--win); }
   table.cs-table td.wr-neg{ color: var(--loss); }
 
+  .cs-champ-row{ cursor:pointer; }
+  .cs-champ-row:hover{ background: var(--bg-panel-2); }
+  .cs-pick-row-link{ cursor:pointer; }
+  .cs-pick-row-link:hover .name{ color: var(--accent); }
+
   .cs-empty{
     color: var(--text-dim);
     font-size: 14px;
@@ -273,7 +278,7 @@
   <div class="cs-header">
     <p class="cs-eyebrow">Herramientas</p>
     <h1 class="cs-title">Estadísticas de Campeones Pro</h1>
-    <p class="cs-subtitle">Consulta qué campeones se están pickeando en cada liga, y cómo rinde cada jugador con ellos: pick rate, winrate y ventaja de oro a los 15 minutos.</p>
+    <p class="cs-subtitle">Consulta qué campeones se están pickeando y baneando en cada liga: veces jugado, veces baneado, y con qué winrate — a nivel de liga y desglosado por equipo.</p>
     <div id="csPlaceholderBanner" class="cs-placeholder-banner">
       Estás viendo <strong>datos de ejemplo</strong>. Esta sección todavía no está conectada al pipeline de datos real — se activará de cara al Winter Split 2027.
     </div>
@@ -294,14 +299,14 @@
 (function(){
 
   // Ajusta esta ruta si alojas los JSON en otro sitio del servidor
-  const DATA_BASE = "/data/champion_stats";
+  const DATA_BASE = "/data/champion-stats";
 
   const ROLE_LABEL = { top:"Top", jungle:"Jungla", mid:"Mid", adc:"ADC", support:"Support" };
   const ROLE_ORDER = ["top","jungle","mid","adc","support"];
 
   let indexData = null;
   let splitData = null;
-  // view: {type: 'league'} | {type:'role', role} | {type:'player', playerId}
+  // view: {type: 'league'} | {type:'champion', championName}
   let view = { type: "league" };
 
   const els = {
@@ -378,172 +383,162 @@
   function render(){
     renderBreadcrumb();
     if(view.type === "league") renderLeagueView();
-    else if(view.type === "role") renderRoleView(view.role);
-    else if(view.type === "player") renderPlayerView(view.playerId);
+    else if(view.type === "champion") renderChampionView(view.championName);
   }
 
   function renderBreadcrumb(){
     const crumbs = [];
     crumbs.push(`<button data-nav="league">${splitData.league} · ${formatSplitLabel(splitData.split)}</button>`);
 
-    if(view.type === "role"){
-      crumbs.push(`<span class="sep">/</span><span class="current">${ROLE_LABEL[view.role]}</span>`);
-    }
-    if(view.type === "player"){
-      const p = findPlayer(view.playerId);
-      crumbs.push(`<span class="sep">/</span><button data-nav="role" data-role="${p.role}">${ROLE_LABEL[p.role]}</button>`);
-      crumbs.push(`<span class="sep">/</span><span class="current">${p.name}</span>`);
+    if(view.type === "champion"){
+      crumbs.push(`<span class="sep">/</span><span class="current">${view.championName}</span>`);
     }
 
     els.breadcrumb.innerHTML = crumbs.join("");
     els.breadcrumb.querySelectorAll("button").forEach(btn => {
       btn.addEventListener("click", () => {
         if(btn.dataset.nav === "league") view = { type: "league" };
-        if(btn.dataset.nav === "role") view = { type: "role", role: btn.dataset.role };
         render();
       });
     });
   }
 
   function renderLeagueView(){
-    const html = ROLE_ORDER.map(role => {
+    // tarjetas de top picks por rol (informativas — cada campeón enlaza a su detalle si hay datos)
+    const roleHtml = ROLE_ORDER.map(role => {
       const picks = (splitData.roleTopPicks && splitData.roleTopPicks[role]) || [];
       const rows = picks.map(p => `
-        <div class="cs-pick-row">
+        <div class="cs-pick-row cs-pick-row-link" data-champion="${p.champion}">
           <span class="name">${p.champion}</span>
           <span class="count">${p.picks} picks</span>
         </div>
       `).join("") || `<div class="cs-pick-row"><span class="name">Sin datos</span></div>`;
 
       return `
-        <div class="cs-role-card" data-role="${role}">
-          <h3>${ROLE_LABEL[role]} <span class="arrow">→</span></h3>
+        <div class="cs-role-card">
+          <h3>${ROLE_LABEL[role]}</h3>
           ${rows}
         </div>
       `;
     }).join("");
 
-    els.content.innerHTML = `<div class="cs-role-grid">${html}</div>`;
-    els.content.querySelectorAll(".cs-role-card").forEach(card => {
-      card.addEventListener("click", () => {
-        view = { type: "role", role: card.dataset.role };
-        render();
-      });
-    });
-  }
+    // tabla completa de campeones: picks, W-L, winrate, baneos
+    const champs = (splitData.champions || []);
+    const sorted = [...champs].sort((a,b) => (b.leagueWide?.picks ?? -1) - (a.leagueWide?.picks ?? -1));
 
-  function renderRoleView(role){
-    const players = [];
-    splitData.teams.forEach(team => {
-      team.players.forEach(p => {
-        if(p.role === role) players.push({ ...p, teamName: team.name });
-      });
-    });
-
-    if(players.length === 0){
-      els.content.innerHTML = `<div class="cs-empty">No hay jugadores registrados en esta posición todavía.</div>`;
-      return;
-    }
-
-    const rows = players.map(p => {
-      const topChamp = [...p.champions].sort((a,b) => b.games - a.games)[0];
+    const rows = sorted.map(c => {
+      const lw = c.leagueWide || {};
       return `
-        <div class="cs-player-row" data-player="${p.id}">
-          <div class="who">
-            <span class="pname">${p.name}</span>
-            <span class="pteam">${p.teamName}</span>
-          </div>
-          <div class="stat">
-            <strong>${topChamp ? topChamp.champion : "—"}</strong>
-            ${topChamp ? `${topChamp.games} partidas · ${Math.round(topChamp.winrate*100)}% WR` : ""}
-          </div>
-        </div>
+        <tr class="cs-champ-row" data-champion="${c.champion}">
+          <td>${c.champion}</td>
+          <td class="num">${fmtNum(lw.picks)}</td>
+          <td class="num">${lw.wins != null && lw.losses != null ? `${lw.wins}-${lw.losses}` : "—"}</td>
+          <td class="num ${wrClass(lw.winrate)}">${fmtPct(lw.winrate)}</td>
+          <td class="num">${fmtNum(lw.bans)}</td>
+          <td class="num">${fmtPct(lw.banRate)}</td>
+        </tr>
       `;
     }).join("");
 
-    els.content.innerHTML = `<div class="cs-player-list">${rows}</div>`;
-    els.content.querySelectorAll(".cs-player-row").forEach(row => {
-      row.addEventListener("click", () => {
-        view = { type: "player", playerId: row.dataset.player };
-        render();
-      });
-    });
-  }
-
-  function renderPlayerView(playerId){
-    const player = findPlayer(playerId);
-    if(!player){
-      els.content.innerHTML = `<div class="cs-empty">Jugador no encontrado.</div>`;
-      return;
-    }
-
-    const champs = player.champions;
-    const mostPicked = [...champs].sort((a,b) => b.games - a.games)[0];
-    const bestWR = [...champs].sort((a,b) => b.winrate - a.winrate)[0];
-    const worstWR = [...champs].sort((a,b) => a.winrate - b.winrate)[0];
-    const bestGD = [...champs].sort((a,b) => b.goldDiff15Avg - a.goldDiff15Avg)[0];
-
-    const summary = `
-      <div class="cs-summary-grid">
-        ${summaryCard("Más pickeado", mostPicked, `${mostPicked.games} partidas`)}
-        ${summaryCard("Mayor winrate", bestWR, `${Math.round(bestWR.winrate*100)}% WR`)}
-        ${summaryCard("Menor winrate", worstWR, `${Math.round(worstWR.winrate*100)}% WR`)}
-        ${summaryCard("Mejor ventaja de oro @15", bestGD, formatGD(bestGD.goldDiff15Avg), true)}
-      </div>
-    `;
-
-    const rows = [...champs].sort((a,b) => b.games - a.games).map(c => `
-      <tr>
-        <td>${c.champion}</td>
-        <td class="num">${c.games}</td>
-        <td class="num">${c.wins}-${c.losses}</td>
-        <td class="num ${c.winrate >= 0.5 ? 'wr-pos':'wr-neg'}">${Math.round(c.winrate*100)}%</td>
-        <td class="num ${c.goldDiff15Avg >= 0 ? 'wr-pos':'wr-neg'}">${formatGD(c.goldDiff15Avg)}</td>
-      </tr>
-    `).join("");
-
-    const table = `
+    const table = champs.length ? `
       <table class="cs-table">
         <thead>
           <tr>
             <th>Campeón</th>
-            <th style="text-align:right">Partidas</th>
+            <th style="text-align:right">Picks</th>
             <th style="text-align:right">V-D</th>
             <th style="text-align:right">Winrate</th>
-            <th style="text-align:right">Oro @15</th>
+            <th style="text-align:right">Baneos</th>
+            <th style="text-align:right">% Baneo</th>
           </tr>
         </thead>
         <tbody>${rows}</tbody>
       </table>
+    ` : `<div class="cs-empty">Todavía no hay campeones cargados para este split.</div>`;
+
+    els.content.innerHTML = `
+      <div class="cs-role-grid">${roleHtml}</div>
+      <div style="margin-top:30px;">${table}</div>
     `;
 
-    els.content.innerHTML = summary + table;
+    els.content.querySelectorAll("[data-champion]").forEach(el => {
+      el.addEventListener("click", () => {
+        const name = el.dataset.champion;
+        if(!findChampion(name)){
+          return; // el campeón del top-pick todavía no tiene ficha propia en champions[]
+        }
+        view = { type: "champion", championName: name };
+        render();
+      });
+    });
+  }
 
-    function summaryCard(label, champ, subtext, isGold){
-      const posClass = isGold ? (champ.goldDiff15Avg >= 0 ? "pos" : "neg") : "";
+  function renderChampionView(championName){
+    const champ = findChampion(championName);
+    if(!champ){
+      els.content.innerHTML = `<div class="cs-empty">Sin datos para este campeón todavía.</div>`;
+      return;
+    }
+
+    const lw = champ.leagueWide || {};
+
+    const summary = `
+      <div class="cs-summary-grid">
+        ${summaryCard("Picks (liga)", fmtNum(lw.picks))}
+        ${summaryCard("V-D (liga)", lw.wins != null ? `${lw.wins}-${lw.losses}` : "—")}
+        ${summaryCard("Winrate", fmtPct(lw.winrate), wrClass(lw.winrate))}
+        ${summaryCard("Baneos", `${fmtNum(lw.bans)} (${fmtPct(lw.banRate)})`)}
+      </div>
+    `;
+
+    const teamEntries = Object.entries(champ.byTeam || {}).filter(([, v]) => v);
+    const teamRows = teamEntries.map(([code, t]) => {
+      const teamName = (splitData.teamNames && splitData.teamNames[code]) || code.toUpperCase();
+      return `
+        <tr>
+          <td>${teamName}</td>
+          <td class="num">${fmtNum(t.games)}</td>
+          <td class="num">${t.wins}-${t.losses}</td>
+          <td class="num ${wrClass(t.winrate)}">${fmtPct(t.winrate)}</td>
+        </tr>
+      `;
+    }).join("");
+
+    const teamTable = teamEntries.length ? `
+      <table class="cs-table">
+        <thead>
+          <tr>
+            <th>Equipo</th>
+            <th style="text-align:right">Partidas</th>
+            <th style="text-align:right">V-D</th>
+            <th style="text-align:right">Winrate</th>
+          </tr>
+        </thead>
+        <tbody>${teamRows}</tbody>
+      </table>
+    ` : `<div class="cs-empty">Sin desglose por equipo todavía para este campeón.</div>`;
+
+    const note = champ.note ? `<p class="cs-subtitle" style="margin:18px 0 0;">${champ.note}</p>` : "";
+
+    els.content.innerHTML = summary + teamTable + note;
+
+    function summaryCard(label, value, extraClass){
       return `
         <div class="cs-summary-card">
           <div class="label">${label}</div>
-          <div class="champ">${champ.champion}</div>
-          <div class="sub ${posClass}">${subtext}</div>
+          <div class="champ ${extraClass || ""}">${value}</div>
         </div>
       `;
     }
   }
 
-  function formatGD(v){
-    const sign = v > 0 ? "+" : "";
-    return `${sign}${v} oro`;
+  function findChampion(name){
+    return (splitData.champions || []).find(c => c.champion === name) || null;
   }
 
-  function findPlayer(playerId){
-    for(const team of splitData.teams){
-      for(const p of team.players){
-        if(p.id === playerId) return { ...p, teamName: team.name };
-      }
-    }
-    return null;
-  }
+  function fmtNum(v){ return (v === null || v === undefined) ? "—" : v; }
+  function fmtPct(v){ return (v === null || v === undefined) ? "—" : `${Math.round(v*100)}%`; }
+  function wrClass(v){ return (v === null || v === undefined) ? "" : (v >= 0.5 ? "wr-pos" : "wr-neg"); }
 
 })();
 </script>
