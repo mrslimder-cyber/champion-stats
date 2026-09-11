@@ -4,6 +4,7 @@
       "id": "lec",
       "name": "LEC",
       "splits": [
+        "2026-summer",
         "2027-winter"
       ]
     }
