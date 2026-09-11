@@ -98,6 +98,7 @@ async function main() {
   const F_P_D = pickField(playerFields, ["Deaths"]);
   const F_P_A = pickField(playerFields, ["Assists"]);
   const F_P_GD15 = pickField(playerFields, ["GoldDiffAt15", "GoldDiff@15", "GoldDiff15", "Gold@15Diff"]);
+  const F_P_OVERVIEW = pickField(playerFields, ["OverviewPage"], { required: true, label: "OverviewPage (ScoreboardPlayers)" });
 
   if (!F_P_GD15) {
     console.warn(
@@ -139,6 +140,22 @@ async function main() {
   let lastDate = state?.last_scraped_date || null;
   let lastGameId = state?.last_game_id || null;
 
+  console.log("Descargando ScoreboardPlayers de todo el torneo (una sola pasada)...");
+  const allPlayers = await cargoQueryAll({
+    tables: "ScoreboardPlayers",
+    fields: [F_P_GAMEID, F_P_LINK, F_P_TEAM, F_P_ROLE, F_P_CHAMP, F_P_WIN, F_P_K, F_P_D, F_P_A, F_P_GD15]
+      .filter(Boolean)
+      .join(","),
+    where: `ScoreboardPlayers.${F_P_OVERVIEW}="${OVERVIEW_PAGE}"`,
+  });
+  const playersByGameId = new Map();
+  for (const p of allPlayers) {
+    const gid = String(p[F_P_GAMEID]);
+    if (!playersByGameId.has(gid)) playersByGameId.set(gid, []);
+    playersByGameId.get(gid).push(p);
+  }
+  console.log(`${allPlayers.length} filas de jugadores para ${playersByGameId.size} partidas.`);
+
   for (const g of games) {
     const gameId = String(g[F_GAME_ID]);
     const team1 = g[F_TEAM1];
@@ -166,14 +183,9 @@ async function main() {
     );
     if (gameErr) throw gameErr;
 
-    // 4. Jugadores de esa partida.
-    const players = await cargoQueryAll({
-      tables: "ScoreboardPlayers",
-      fields: [F_P_LINK, F_P_TEAM, F_P_ROLE, F_P_CHAMP, F_P_WIN, F_P_K, F_P_D, F_P_A, F_P_GD15]
-        .filter(Boolean)
-        .join(","),
-      where: `ScoreboardPlayers.${F_P_GAMEID}="${gameId}"`,
-    });
+   
+    // 4. Jugadores de esa partida (ya descargados en bloque, sin petición extra).
+    const players = playersByGameId.get(gameId) || [];
 
     // Borramos y reinsertamos las filas de esta partida: evita duplicados sin
     // depender de que exista un índice único exacto, y es idempotente si se
