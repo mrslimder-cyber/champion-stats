@@ -18,12 +18,9 @@ async function rateLimit() {
   lastCallAt = Date.now();
 }
 
-async function cargoFetch(params) {
+async function cargoFetch(params, attempt = 1) {
   await rateLimit();
-  const url = `${API}?${new URLSearchParams({
-    ...params,
-    formatversion: "2", // fuerza arrays JSON "de verdad" (v1 puede serializar listas como objetos {"0":..,"1":..})
-  }).toString()}`;
+  const url = `${API}?${new URLSearchParams({ ...params, formatversion: "2" }).toString()}`;
   const res = await fetch(url, { headers: { "User-Agent": USER_AGENT } });
   if (!res.ok) {
     const body = await res.text().catch(() => "");
@@ -31,6 +28,12 @@ async function cargoFetch(params) {
   }
   const data = await res.json();
   if (data.error) {
+    if (data.error.code === "ratelimited" && attempt <= 5) {
+      const waitMs = attempt * 5000; // 5s, 10s, 15s, 20s, 25s
+      console.warn(`  (rate limit de Leaguepedia, esperando ${waitMs / 1000}s antes de reintentar — intento ${attempt}/5)`);
+      await sleep(waitMs);
+      return cargoFetch(params, attempt + 1);
+    }
     throw new Error(`Cargo API error: ${JSON.stringify(data.error)}`);
   }
   return data;
